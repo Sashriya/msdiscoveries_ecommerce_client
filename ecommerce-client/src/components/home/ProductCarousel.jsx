@@ -1,0 +1,212 @@
+import React, { useRef, useState, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import useCart from '../../hooks/useCart';
+
+const ProductCarousel = ({ products }) => {
+  const scrollRef = useRef(null);
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
+  const [isAdding, setIsAdding] = useState(false);
+
+  const updateArrows = useCallback(() => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setShowLeftArrow(scrollLeft > 0);
+      setShowRightArrow(scrollLeft + clientWidth < scrollWidth - 10);
+    }
+  }, []);
+
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === 'left' ? -400 : 400;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      setTimeout(updateArrows, 100);
+    }
+  };
+
+  const handleScroll = () => {
+    updateArrows();
+  };
+
+  const handleAddToCart = (product, e) => {
+    e.stopPropagation();
+    setIsAdding(true);
+    addToCart(product, 1, product.sizes?.[0] || 'M', product.colors?.[0] || 'Default');
+    setTimeout(() => {
+      setIsAdding(false);
+      navigate('/cart');
+    }, 500);
+  };
+
+  const openQuickView = (product, e) => {
+    e.stopPropagation();
+    setQuickViewProduct(product);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeQuickView = () => {
+    setQuickViewProduct(null);
+    document.body.style.overflow = 'unset';
+  };
+
+  return (
+    <>
+      <div className="relative group">
+        {/* Left Arrow */}
+        {showLeftArrow && (
+          <button
+            onClick={() => scroll('left')}
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg transition-all duration-300 -translate-x-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0"
+            aria-label="Previous products"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        )}
+
+        {/* Carousel Container */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {products.map((product) => (
+            <div key={product.id} className="flex-none w-72 group/product cursor-pointer">
+              <div className="relative overflow-hidden rounded-lg mb-4">
+                <img 
+                  src={product.image} 
+                  alt={product.name}
+                  className="w-full h-96 object-cover group-hover/product:scale-105 transition-transform duration-500"
+                />
+                {product.badge && (
+                  <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
+                    {product.badge}
+                  </span>
+                )}
+                {/* Quick View Button */}
+                <button
+                  onClick={(e) => openQuickView(product, e)}
+                  className="absolute bottom-3 left-3 right-3 bg-white text-black py-2 rounded-full opacity-0 group-hover/product:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white"
+                >
+                  Quick View
+                </button>
+              </div>
+              <div className="text-center">
+                <Link to={`/product/${product.id}`} onClick={(e) => e.stopPropagation()}>
+                  <h3 className="font-medium mb-1 hover:text-gray-600 transition-colors">
+                    {product.name}
+                  </h3>
+                </Link>
+                <p className="text-sm text-gray-500 mb-2">{product.category}</p>
+                <div className="flex gap-2 justify-center">
+                  <span className="font-semibold">${product.price}</span>
+                  {product.originalPrice && (
+                    <span className="text-gray-400 line-through">${product.originalPrice}</span>
+                  )}
+                </div>
+                <button
+                  onClick={(e) => handleAddToCart(product, e)}
+                  disabled={isAdding}
+                  className="mt-3 px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors w-full disabled:opacity-50"
+                >
+                  {isAdding ? 'Adding...' : 'Add to Cart'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Right Arrow */}
+        {showRightArrow && (
+          <button
+            onClick={() => scroll('right')}
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg transition-all duration-300 translate-x-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0"
+            aria-label="Next products"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={closeQuickView}
+        >
+          <div 
+            className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center rounded-t-2xl">
+              <h3 className="text-lg font-medium text-gray-900">Quick View</h3>
+              <button 
+                onClick={closeQuickView} 
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Close"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="bg-gray-100 rounded-xl overflow-hidden">
+                  <img 
+                    src={quickViewProduct.image} 
+                    alt={quickViewProduct.name} 
+                    className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div>
+                  {quickViewProduct.badge && (
+                    <span className="inline-block bg-red-600 text-white text-xs px-3 py-1 rounded-full mb-3">
+                      {quickViewProduct.badge}
+                    </span>
+                  )}
+                  <h2 className="text-2xl md:text-3xl font-light mb-2">{quickViewProduct.name}</h2>
+                  <p className="text-gray-500 text-sm mb-3">{quickViewProduct.category}</p>
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-2xl font-bold text-red-600">${quickViewProduct.price}</span>
+                    {quickViewProduct.originalPrice && (
+                      <span className="text-gray-400 line-through">${quickViewProduct.originalPrice}</span>
+                    )}
+                  </div>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    {quickViewProduct.description || 'Premium quality product with exceptional comfort and style.'}
+                  </p>
+                  <div className="space-y-3">
+                    <button
+                      onClick={(e) => handleAddToCart(quickViewProduct, e)}
+                      disabled={isAdding}
+                      className="w-full py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors disabled:opacity-50 font-medium"
+                    >
+                      {isAdding ? 'Adding to Cart...' : 'Add to Cart'}
+                    </button>
+                    <Link
+                      to={`/product/${quickViewProduct.id}`}
+                      onClick={closeQuickView}
+                      className="block text-center text-sm text-gray-500 hover:text-black transition-colors py-2"
+                    >
+                      View Full Details →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default ProductCarousel;
