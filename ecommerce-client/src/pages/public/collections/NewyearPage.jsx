@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import ProductCard from '../../components/shop/ProductCard';
-import Loader from '../../components/common/Loader';
+import ProductCard from '../../../components/shop/ProductCard';
+import Loader from '../../../components/common/Loader';
 
 const NewYearPage = () => {
   const [products, setProducts] = useState([]);
@@ -9,14 +9,14 @@ const NewYearPage = () => {
 
   useEffect(() => {
     const newYearProducts = [
-      { id: 1, name: 'Premium Midnight Satin Gown', brand: 'THEKOUR ATELIER', price: 189.99, originalPrice: 289.99, image: 'https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=400&h=500&fit=crop', category: 'Party Wear', badge: 'Limited', color: 'Black', rating: 4.9 },
-      { id: 2, name: 'Signature Sharp Tailored Blazer', brand: 'THEKOUR ATELIER', price: 159.99, originalPrice: 229.99, image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=500&fit=crop', category: 'Blazers', badge: 'Best Seller', color: 'Navy', rating: 4.8 },
-      { id: 3, name: 'Essential Metallic Accent Layer', brand: 'THEKOUR ATELIER', price: 129.99, originalPrice: 199.99, image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&h=500&fit=crop', category: 'Outerwear', badge: 'New', color: 'Gold', rating: 4.7 },
-      { id: 4, name: 'Limited Edition Silk Trouser', brand: 'THEKOUR ATELIER', price: 89.99, originalPrice: 139.99, image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=500&fit=crop', category: 'Bottoms', badge: '', color: 'Silver', rating: 4.6 },
-      { id: 5, name: 'Sequin Party Dress', brand: 'THEKOUR ATELIER', price: 149.99, originalPrice: 229.99, image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=500&fit=crop', category: 'Dresses', badge: 'Limited', color: 'Gold', rating: 4.9 },
-      { id: 6, name: 'Celebration Heels', brand: 'THEKOUR ATELIER', price: 99.99, originalPrice: 149.99, image: 'https://images.unsplash.com/photo-1549298916-f52d724204b4?w=400&h=500&fit=crop', category: 'Footwear', badge: 'Trending', color: 'Silver', rating: 4.8 },
-      { id: 7, name: 'Metallic Clutch', brand: 'THEKOUR ATELIER', price: 69.99, originalPrice: 99.99, image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=500&fit=crop', category: 'Accessories', badge: '', color: 'Gold', rating: 4.5 },
-      { id: 8, name: 'Statement Necklace', brand: 'THEKOUR ATELIER', price: 49.99, originalPrice: 79.99, image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=500&fit=crop', category: 'Jewelry', badge: 'New', color: 'Silver', rating: 4.6 },
+      { id: 1, name: 'Premium Midnight Satin Gown', brand: 'THEKOUR ATELIER', price: 189.99, originalPrice: 289.99, image: 'https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=400&h=500&fit=crop', category: 'Party Wear', badge: 'Limited', color: 'Black', rating: 4.9, reviews: 234 },
+      { id: 2, name: 'Signature Sharp Tailored Blazer', brand: 'THEKOUR ATELIER', price: 159.99, originalPrice: 229.99, image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=500&fit=crop', category: 'Blazers', badge: 'Best Seller', color: 'Navy', rating: 4.8, reviews: 456 },
+      { id: 3, name: 'Essential Metallic Accent Layer', brand: 'THEKOUR ATELIER', price: 129.99, originalPrice: 199.99, image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&h=500&fit=crop', category: 'Outerwear', badge: 'New', color: 'Gold', rating: 4.7, reviews: 123 },
+      { id: 4, name: 'Limited Edition Silk Trouser', brand: 'THEKOUR ATELIER', price: 89.99, originalPrice: 139.99, image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=500&fit=crop', category: 'Bottoms', badge: '', color: 'Silver', rating: 4.6, reviews: 89 },
+      { id: 5, name: 'Sequin Party Dress', brand: 'THEKOUR ATELIER', price: 149.99, originalPrice: 229.99, image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=500&fit=crop', category: 'Dresses', badge: 'Limited', color: 'Gold', rating: 4.9, reviews: 312 },
+      { id: 6, name: 'Celebration Heels', brand: 'THEKOUR ATELIER', price: 99.99, originalPrice: 149.99, image: 'https://images.unsplash.com/photo-1549298916-f52d724204b4?w=400&h=500&fit=crop', category: 'Footwear', badge: 'Trending', color: 'Silver', rating: 4.8, reviews: 178 },
+      { id: 7, name: 'Metallic Clutch', brand: 'THEKOUR ATELIER', price: 69.99, originalPrice: 99.99, image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=500&fit=crop', category: 'Accessories', badge: '', color: 'Gold', rating: 4.5, reviews: 67 },
+      { id: 8, name: 'Statement Necklace', brand: 'THEKOUR ATELIER', price: 49.99, originalPrice: 79.99, image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=500&fit=crop', category: 'Jewelry', badge: 'New', color: 'Silver', rating: 4.6, reviews: 45 },
     ];
     setTimeout(() => { setProducts(newYearProducts); setIsLoading(false); }, 500);
   }, []);
