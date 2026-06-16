@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+﻿import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
-    minify: 'esbuild', // Use esbuild instead of terser
+    minify: 'esbuild', // Fast, built-in minifier
     rollupOptions: {
       output: {
         manualChunks: {
@@ -16,6 +16,10 @@ export default defineConfig({
     },
   },
   server: {
+    port: 3000,
     open: true,
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom'],
   },
 })
