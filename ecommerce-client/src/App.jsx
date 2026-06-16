@@ -104,7 +104,7 @@ import OfficePage from './pages/public/occasion/OfficePage';
 import CasualPage from './pages/public/occasion/CasualPage';
 import BeachPage from './pages/public/occasion/BeachPage';
 
-// Collections - Fixed import paths
+// Collections
 import SummerPage from './pages/public/collections/SummerPage';
 import WinterPage from './pages/public/collections/WinterPage';
 import SpringPage from './pages/public/collections/SpringPage';
@@ -112,7 +112,7 @@ import FallPage from './pages/public/collections/FallPage';
 import DiwaliPage from './pages/public/collections/DiwaliPage';
 import ChristmasPage from './pages/public/collections/ChristmasPage';
 import EidPage from './pages/public/collections/EidPage';
-import NewYearPage from './pages/public/collections/NewYearPage';  // Fixed: Correct path
+import NewYearPage from './pages/public/collections/NewYearPage';
 import CapsulePage from './pages/public/collections/CapsulePage';
 import DesignerPage from './pages/public/collections/DesignerPage';
 import SustainablePage from './pages/public/collections/SustainablePage';
