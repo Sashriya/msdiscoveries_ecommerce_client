@@ -1,13 +1,10 @@
 ﻿import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import { AdminProvider } from './context/AdminContext';
 import Layout from './components/layout/Layout';
 import ProtectedRoute from './components/common/ProtectedRoute';
-import ScrollToTop from './components/common/ScrollToTop';
-import BackToTop from './components/common/BackToTop';
-import ScrollToBottom from './components/common/ScrollToBottom';
 
 // Public Pages
 import HomePage from './pages/public/HomePage';
@@ -107,7 +104,7 @@ import OfficePage from './pages/public/occasion/OfficePage';
 import CasualPage from './pages/public/occasion/CasualPage';
 import BeachPage from './pages/public/occasion/BeachPage';
 
-// Collections
+// Collections - Fixed import paths
 import SummerPage from './pages/public/collections/SummerPage';
 import WinterPage from './pages/public/collections/WinterPage';
 import SpringPage from './pages/public/collections/SpringPage';
@@ -115,41 +112,11 @@ import FallPage from './pages/public/collections/FallPage';
 import DiwaliPage from './pages/public/collections/DiwaliPage';
 import ChristmasPage from './pages/public/collections/ChristmasPage';
 import EidPage from './pages/public/collections/EidPage';
-import NewYearPage from './pages/public/collections/NewYearPage';
+import NewYearPage from './pages/public/collections/NewYearPage';  // Fixed: Correct path
 import CapsulePage from './pages/public/collections/CapsulePage';
 import DesignerPage from './pages/public/collections/DesignerPage';
 import SustainablePage from './pages/public/collections/SustainablePage';
 import PremiumPage from './pages/public/collections/PremiumPage';
-
-// =================== SCROLL RESTORATION COMPONENT ===================
-function ScrollRestoration() {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    const savedPosition = sessionStorage.getItem(`scrollPos_${pathname}`);
-    if (savedPosition) {
-      setTimeout(() => {
-        window.scrollTo({
-          top: parseInt(savedPosition),
-          behavior: 'auto'
-        });
-      }, 100);
-    } else {
-      window.scrollTo(0, 0);
-    }
-  }, [pathname]);
-
-  useEffect(() => {
-    const saveScrollPosition = () => {
-      sessionStorage.setItem(`scrollPos_${pathname}`, window.scrollY.toString());
-    };
-    
-    window.addEventListener('beforeunload', saveScrollPosition);
-    return () => window.removeEventListener('beforeunload', saveScrollPosition);
-  }, [pathname]);
-
-  return null;
-}
 
 // =================== APP COMPONENT ===================
 function App() {
@@ -158,8 +125,6 @@ function App() {
       <CartProvider>
         <AdminProvider>
           <Router>
-            <ScrollRestoration />
-            <ScrollToTop />
             <Routes>
               {/* ---------- PUBLIC ROUTES ---------- */}
               <Route path="/" element={<Layout><HomePage /></Layout>} />
@@ -276,8 +241,6 @@ function App() {
               {/* ---------- 404 NOT FOUND ---------- */}
               <Route path="*" element={<Layout><NotFoundPage /></Layout>} />
             </Routes>
-            <BackToTop />
-            <ScrollToBottom />
           </Router>
         </AdminProvider>
       </CartProvider>

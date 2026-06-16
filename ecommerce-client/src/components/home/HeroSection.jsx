@@ -17,25 +17,25 @@ const HeroSection = ({ title, subtitle, ctaText, ctaLink, backgroundImage, badge
       </div>
       
       {/* Content */}
-      <div className="relative text-center text-white px-4 max-w-4xl mx-auto z-10 animate-fadeInUp">
+      <div className="relative text-center text-white px-4 max-w-4xl mx-auto z-10">
         {/* Badge with Icon */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm tracking-wider mb-6 border border-white/20 animate-fadeIn">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm tracking-wider mb-6 border border-white/20">
           <span>{badgeIcon}</span>
           <span>{badge}</span>
         </div>
         
         {/* Main Title */}
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-light mb-6 tracking-wide leading-tight animate-slideUp">
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-light mb-6 tracking-wide leading-tight">
           {title}
         </h1>
         
         {/* Subtitle */}
-        <p className="text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light leading-relaxed text-white/90 animate-slideUp delay-100">
+        <p className="text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light leading-relaxed text-white/90">
           {subtitle}
         </p>
         
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slideUp delay-200">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link 
             to={ctaLink}
             className="group relative overflow-hidden inline-flex items-center justify-center gap-2 bg-white text-black px-8 py-3 rounded-full hover:bg-gray-100 transition-all duration-300 font-medium tracking-wide shadow-lg hover:shadow-xl"
@@ -63,55 +63,6 @@ const HeroSection = ({ title, subtitle, ctaText, ctaLink, backgroundImage, badge
           </svg>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        .animate-fadeInUp {
-          animation: fadeInUp 0.8s ease-out;
-        }
-        .animate-slideUp {
-          animation: slideUp 0.6s ease-out;
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.4s ease-out;
-        }
-        .delay-100 {
-          animation-delay: 0.1s;
-        }
-        .delay-200 {
-          animation-delay: 0.2s;
-        }
-        .delay-700 {
-          animation-delay: 0.7s;
-        }
-      `}</style>
     </div>
   );
 };
