@@ -83,9 +83,12 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="border-t border-gray-900 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-sm text-gray-500">
+          <div className="flex flex-col items-center gap-4">
+            <div className="text-sm text-gray-500 text-center">
               © {new Date().getFullYear()} THEKOUR. All rights reserved.
+            </div>
+            <div className="text-xs text-gray-400 text-center">
+              Powered by Ameriavis Tech
             </div>
             <div className="flex gap-6 text-xs text-gray-500">
               <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>

@@ -104,7 +104,7 @@ const categories = [
   { name: 'Men', image: 'https://images.unsplash.com/photo-1617137968427-85924c800c22?w=600&h=400&fit=crop', link: '/men', itemCount: 245 },
   { name: 'Women', image: 'https://images.unsplash.com/photo-1483985988355-963728d0471e?w=600&h=400&fit=crop', link: '/women', itemCount: 312 },
   { name: 'Accessories', image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&h=400&fit=crop', link: '/accessories', itemCount: 189 },
-  { name: 'Sale', image: 'https://images.unsplash.com/photo-1607083206968-13611e3e76db?w=600&h=400&fit=crop', link: '/sale', itemCount: 76 },
+  { name: 'All Products', image: 'https://images.unsplash.com/photo-1607083206968-13611e3e76db?w=600&h=400&fit=crop', link: '/shop', itemCount: 876 },
 ];
 
 const HomePage = () => {
@@ -123,3 +123,4 @@ const HomePage = () => {
   );
 };
 export default HomePage;
+

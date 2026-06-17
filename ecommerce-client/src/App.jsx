@@ -112,7 +112,6 @@ import FallPage from './pages/public/collections/FallPage';
 import DiwaliPage from './pages/public/collections/DiwaliPage';
 import ChristmasPage from './pages/public/collections/ChristmasPage';
 import EidPage from './pages/public/collections/EidPage';
-import NewYearPage from './pages/public/collections/NewYearPage.jsx';
 import CapsulePage from './pages/public/collections/CapsulePage';
 import DesignerPage from './pages/public/collections/DesignerPage';
 import SustainablePage from './pages/public/collections/SustainablePage';
@@ -214,7 +213,6 @@ function App() {
               <Route path="/collections/diwali" element={<Layout><DiwaliPage /></Layout>} />
               <Route path="/collections/christmas" element={<Layout><ChristmasPage /></Layout>} />
               <Route path="/collections/eid" element={<Layout><EidPage /></Layout>} />
-              <Route path="/collections/newyear" element={<Layout><NewYearPage /></Layout>} />
               <Route path="/collections/capsule" element={<Layout><CapsulePage /></Layout>} />
               <Route path="/collections/designer" element={<Layout><DesignerPage /></Layout>} />
               <Route path="/collections/sustainable" element={<Layout><SustainablePage /></Layout>} />
@@ -249,4 +247,5 @@ function App() {
 }
 
 export default App;
+
 
