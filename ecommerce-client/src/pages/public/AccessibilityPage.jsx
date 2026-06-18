@@ -8,13 +8,6 @@ const AccessibilityPage = () => {
       <div className="relative h-[40vh] min-h-[300px] bg-cover bg-center bg-no-repeat flex items-center justify-center"
            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1920&h=500&fit=crop)' }}>
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30"></div>
-        <div className="relative text-center text-white px-4">
-          <div className="inline-block px-4 py-1 bg-blue-500/20 backdrop-blur-sm rounded-full text-sm mb-4 border border-blue-400/30">
-            ♿ Equal Access for All
-          </div>
-          <h1 className="text-5xl md:text-6xl font-light mb-4 tracking-wide">Accessibility</h1>
-          <p className="text-lg max-w-2xl mx-auto">Making THEKOUR accessible to everyone</p>
-        </div>
       </div>
 
       {/* Breadcrumb */}

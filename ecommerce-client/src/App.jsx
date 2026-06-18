@@ -9,6 +9,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 // Public Pages
 import HomePage from './pages/public/HomePage';
 import ShopPage from './pages/public/ShopPage';
+import ShopAllPage from './pages/public/ShopAllPage';
 import ProductDetailPage from './pages/public/ProductDetailPage';
 import CartPage from './pages/public/CartPage';
 import CheckoutPage from './pages/public/CheckoutPage';
@@ -128,6 +129,7 @@ function App() {
               {/* ---------- PUBLIC ROUTES ---------- */}
               <Route path="/" element={<Layout><HomePage /></Layout>} />
               <Route path="/shop" element={<Layout><ShopPage /></Layout>} />
+              <Route path="/shop/all" element={<Layout><ShopAllPage /></Layout>} />
               <Route path="/product/:id" element={<Layout><ProductDetailPage /></Layout>} />
               <Route path="/cart" element={<Layout><CartPage /></Layout>} />
               <Route path="/checkout" element={<Layout><CheckoutPage /></Layout>} />

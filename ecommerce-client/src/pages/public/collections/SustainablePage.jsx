@@ -25,11 +25,6 @@ const SustainablePage = () => {
     <div className="bg-gray-50 min-h-screen">
       <div className="relative h-[50vh] min-h-[400px] bg-cover bg-center bg-no-repeat flex items-center justify-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1920&h=600&fit=crop)' }}>
         <div className="absolute inset-0 bg-gradient-to-r from-green-800/60 to-green-900/30"></div>
-        <div className="relative text-center text-white px-4">
-          <div className="inline-block px-4 py-1 bg-green-500/20 backdrop-blur-sm rounded-full text-sm mb-4 border border-green-400/30">🌱 Conscious Choice</div>
-          <h1 className="text-6xl md:text-7xl font-light mb-4 tracking-wide">Sustainable Collection</h1>
-          <p className="text-xl max-w-2xl mx-auto">Fashion that respects our planet</p>
-        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-4">

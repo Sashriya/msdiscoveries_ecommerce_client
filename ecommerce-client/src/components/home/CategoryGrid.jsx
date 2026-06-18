@@ -2,12 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const CategoryGrid = ({ categories }) => {
+  // Helper function to generate correct URL
+  const getCategoryUrl = (categoryName) => {
+    if (categoryName.toLowerCase() === 'all products') {
+      return '/shop'; // Special case for All Products
+    }
+    return `/${categoryName.toLowerCase()}`;
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {categories.map((category, index) => (
         <Link 
           key={index}
-          to={`/${category.name.toLowerCase()}`}
+          to={getCategoryUrl(category.name)}
           className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
         >
           <div className="relative h-80 overflow-hidden">

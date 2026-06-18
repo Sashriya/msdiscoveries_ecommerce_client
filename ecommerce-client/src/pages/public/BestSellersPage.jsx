@@ -30,15 +30,8 @@ const BestSellersPage = () => {
     <div className="bg-gray-50 min-h-screen">
       {/* Hero Banner Section */}
       <div className="relative h-[50vh] min-h-[400px] bg-cover bg-center bg-no-repeat flex items-center justify-center"
-           style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1920&h=600&fit=crop)' }}>
+           style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=1920&h=600&fit=crop)' }}>
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30"></div>
-        <div className="relative text-center text-white px-4">
-          <div className="inline-block px-4 py-1 bg-yellow-500/20 backdrop-blur-sm rounded-full text-sm mb-4 border border-yellow-400/30">
-            🏆 Customer Favorites
-          </div>
-          <h1 className="text-6xl md:text-7xl font-light mb-4 tracking-wide">Best Sellers</h1>
-          <p className="text-xl max-w-2xl mx-auto">Our most popular items loved by customers worldwide</p>
-        </div>
       </div>
 
       {/* Breadcrumb */}

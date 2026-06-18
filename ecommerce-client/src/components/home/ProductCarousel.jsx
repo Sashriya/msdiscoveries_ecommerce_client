@@ -10,6 +10,8 @@ const ProductCarousel = ({ products }) => {
   const [showRightArrow, setShowRightArrow] = useState(true);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
+  const [wishlistItems, setWishlistItems] = useState({});
+  const [selectedColors, setSelectedColors] = useState({});
 
   const updateArrows = useCallback(() => {
     if (scrollRef.current) {
@@ -34,11 +36,29 @@ const ProductCarousel = ({ products }) => {
   const handleAddToCart = (product, e) => {
     e.stopPropagation();
     setIsAdding(true);
-    addToCart(product, 1, product.sizes?.[0] || 'M', product.colors?.[0] || 'Default');
+    const colorIndex = selectedColors[product.id] || 0;
+    const selectedColor = product.colors?.[colorIndex] || 'Default';
+    addToCart(product, 1, product.sizes?.[0] || 'M', selectedColor);
     setTimeout(() => {
       setIsAdding(false);
       navigate('/cart');
     }, 500);
+  };
+
+  const handleWishlist = (productId, e) => {
+    e.stopPropagation();
+    setWishlistItems(prev => ({
+      ...prev,
+      [productId]: !prev[productId]
+    }));
+  };
+
+  const handleColorChange = (productId, colorIndex, e) => {
+    e.stopPropagation();
+    setSelectedColors(prev => ({
+      ...prev,
+      [productId]: colorIndex
+    }));
   };
 
   const openQuickView = (product, e) => {
@@ -52,6 +72,14 @@ const ProductCarousel = ({ products }) => {
     document.body.style.overflow = 'unset';
   };
 
+  const getProductImage = (product) => {
+    const colorIndex = selectedColors[product.id] || 0;
+    if (product.colorImages && product.colorImages.length > 0) {
+      return product.colorImages[colorIndex] || product.image;
+    }
+    return product.image;
+  };
+
   return (
     <>
       <div className="relative group">
@@ -63,7 +91,7 @@ const ProductCarousel = ({ products }) => {
             aria-label="Previous products"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7 7-7 7" />
             </svg>
           </button>
         )}
@@ -75,50 +103,124 @@ const ProductCarousel = ({ products }) => {
           className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {products.map((product) => (
-            <div key={product.id} className="flex-none w-72 group/product cursor-pointer">
-              <div className="relative overflow-hidden rounded-lg mb-4">
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="w-full h-96 object-cover group-hover/product:scale-105 transition-transform duration-500"
-                />
-                {product.badge && (
-                  <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
-                    {product.badge}
-                  </span>
-                )}
-                {/* Quick View Button */}
-                <button
-                  onClick={(e) => openQuickView(product, e)}
-                  className="absolute bottom-3 left-3 right-3 bg-white text-black py-2 rounded-full opacity-0 group-hover/product:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white"
-                >
-                  Quick View
-                </button>
-              </div>
-              <div className="text-center">
-                <Link to={`/product/${product.id}`} onClick={(e) => e.stopPropagation()}>
-                  <h3 className="font-medium mb-1 hover:text-gray-600 transition-colors">
-                    {product.name}
-                  </h3>
-                </Link>
-                <p className="text-sm text-gray-500 mb-2">{product.category}</p>
-                <div className="flex gap-2 justify-center">
-                  <span className="font-semibold">${product.price}</span>
-                  {product.originalPrice && (
-                    <span className="text-gray-400 line-through">${product.originalPrice}</span>
+          {products.map((product) => {
+            const isWishlisted = wishlistItems[product.id] || false;
+            const currentColorIndex = selectedColors[product.id] || 0;
+            const displayColors = product.colors || [];
+            
+            return (
+              <div key={product.id} className="flex-none w-72 group/product cursor-pointer">
+                <div className="relative overflow-hidden rounded-lg mb-4 bg-gray-50">
+                  <img 
+                    src={getProductImage(product)} 
+                    alt={product.name}
+                    className="w-full h-96 object-cover group-hover/product:scale-105 transition-transform duration-500"
+                  />
+                  
+                  {/* Badge */}
+                  {product.badge && (
+                    <span className="absolute top-3 left-3 bg-black text-white text-[10px] tracking-wider uppercase px-3 py-1 rounded-full font-light">
+                      {product.badge}
+                    </span>
                   )}
+                  
+                  {/* Wishlist Heart Icon - Top Right */}
+                  <button
+                    onClick={(e) => handleWishlist(product.id, e)}
+                    className="absolute top-3 right-3 z-10 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-sm"
+                    aria-label="Add to wishlist"
+                  >
+                    <svg 
+                      className={`w-4 h-4 transition-colors duration-300 ${isWishlisted ? 'text-black fill-black' : 'text-gray-400 hover:text-black'}`}
+                      fill={isWishlisted ? 'currentColor' : 'none'}
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                  </button>
+
+                  {/* Plus Icon - Quick View (Center on hover) */}
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/product:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <button
+                      onClick={(e) => openQuickView(product, e)}
+                      className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-black hover:text-white transition-all duration-300 shadow-lg transform hover:scale-110"
+                      aria-label="Quick view"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-                <button
-                  onClick={(e) => handleAddToCart(product, e)}
-                  disabled={isAdding}
-                  className="mt-3 px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors w-full disabled:opacity-50"
-                >
-                  {isAdding ? 'Adding...' : 'Add to Cart'}
-                </button>
+                
+                <div className="text-center">
+                  {/* Product Name */}
+                  <Link to={`/product/${product.id}`} onClick={(e) => e.stopPropagation()}>
+                    <h3 className="font-medium text-sm mb-1 hover:text-gray-600 transition-colors line-clamp-2 min-h-[40px]">
+                      {product.name}
+                    </h3>
+                  </Link>
+                  
+                  {/* Price */}
+                  <div className="flex gap-2 justify-center">
+                    <span className="font-semibold">${product.price}</span>
+                    {product.originalPrice && (
+                      <span className="text-gray-400 line-through">${product.originalPrice}</span>
+                    )}
+                  </div>
+                  
+                  {/* Rating */}
+                  {product.rating && (
+                    <div className="flex items-center justify-center gap-1 mt-1">
+                      <div className="flex text-yellow-400">
+                        {[...Array(5)].map((_, i) => (
+                          <svg key={i} className="w-3 h-3 fill-current" viewBox="0 0 24 24">
+                            <path d={i < Math.floor(product.rating) ? "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" : "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"}/>
+                          </svg>
+                        ))}
+                      </div>
+                      <span className="text-xs text-gray-400">{product.rating}</span>
+                      {product.reviews && (
+                        <span className="text-xs text-gray-400">({product.reviews})</span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Color Options with +X more */}
+                  {displayColors.length > 0 && (
+                    <div className="flex items-center justify-center gap-1 mt-1">
+                      <div className="flex gap-1">
+                        {displayColors.slice(0, 4).map((color, idx) => (
+                          <button
+                            key={idx}
+                            onClick={(e) => handleColorChange(product.id, idx, e)}
+                            className={`w-5 h-5 rounded-full border-2 transition-all ${
+                              currentColorIndex === idx ? 'border-black scale-110' : 'border-gray-200 hover:border-gray-400'
+                            }`}
+                            style={{ backgroundColor: color.toLowerCase() }}
+                            title={color}
+                          />
+                        ))}
+                      </div>
+                      {displayColors.length > 4 && (
+                        <span className="text-[10px] text-gray-400 ml-1">+{displayColors.length - 4}</span>
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* Add to Cart Button */}
+                  <button
+                    onClick={(e) => handleAddToCart(product, e)}
+                    disabled={isAdding}
+                    className="mt-3 px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors w-full disabled:opacity-50"
+                  >
+                    {isAdding ? 'Adding...' : 'Add to Cart'}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Right Arrow */}

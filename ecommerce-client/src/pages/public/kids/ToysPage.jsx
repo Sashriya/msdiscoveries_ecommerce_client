@@ -120,13 +120,6 @@ const ToysPage = () => {
       <div className="relative h-[50vh] min-h-[400px] bg-cover bg-center bg-no-repeat flex items-center justify-center"
            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1536405286946-6a243d8ca427?w=1920&h=600&fit=crop)' }}>
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30"></div>
-        <div className="relative text-center text-white px-4">
-          <div className="inline-block px-4 py-1 bg-green-500/20 backdrop-blur-sm rounded-full text-sm mb-4 border border-green-400/30">
-            🧸 Play & Learn
-          </div>
-          <h1 className="text-6xl md:text-7xl font-light mb-4 tracking-wide">Toys & Objects</h1>
-          <p className="text-xl max-w-2xl mx-auto">Discover our curated collection of educational and creative toys</p>
-        </div>
       </div>
 
       {/* Breadcrumb */}

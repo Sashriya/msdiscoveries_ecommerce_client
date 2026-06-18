@@ -101,10 +101,10 @@ const featuredProducts = [
 ];
 
 const categories = [
-  { name: 'Men', image: 'https://images.unsplash.com/photo-1617137968427-85924c800c22?w=600&h=400&fit=crop', link: '/men', itemCount: 245 },
-  { name: 'Women', image: 'https://images.unsplash.com/photo-1483985988355-963728d0471e?w=600&h=400&fit=crop', link: '/women', itemCount: 312 },
-  { name: 'Accessories', image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&h=400&fit=crop', link: '/accessories', itemCount: 189 },
-  { name: 'All Products', image: 'https://images.unsplash.com/photo-1607083206968-13611e3e76db?w=600&h=400&fit=crop', link: '/shop', itemCount: 876 },
+  { name: 'Men', image: 'https://images.unsplash.com/photo-1617137968427-85924c800c22?w=600&h=400&fit=crop', itemCount: 245 },
+  { name: 'Women', image: 'https://images.unsplash.com/photo-1483985988355-963728d0471e?w=600&h=400&fit=crop', itemCount: 312 },
+  { name: 'Accessories', image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&h=400&fit=crop', itemCount: 189 },
+  { name: 'All Products', image: 'https://images.unsplash.com/photo-1607083206968-13611e3e76db?w=600&h=400&fit=crop', itemCount: 876 },
 ];
 
 const HomePage = () => {

@@ -1,16 +1,24 @@
-﻿import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+﻿// ShopPage.jsx
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import ProductCard from '../../components/shop/ProductCard';
-import FilterSidebar from '../../components/shop/FilterSidebar';
 import Loader from '../../components/common/Loader';
 
 const ShopPage = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState('featured');
-  const [filters, setFilters] = useState({ category: [], priceRange: [0, 500], sizes: [], rating: 0 });
   const [viewMode, setViewMode] = useState('grid');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  // Categories for horizontal menu - Quince style
+  const categories = [
+    'All', 'New Arrivals', 'Best Sellers', 'Women', 'Men', 
+    'Dresses', 'Tops', 'Sweaters', 'Pants', 'Outerwear', 
+    'Bags', 'Shoes', 'Accessories', 'Jewelry'
+  ];
 
   useEffect(() => {
     const allProducts = [
@@ -34,132 +42,222 @@ const ShopPage = () => {
     }, 500);
   }, []);
 
+  // Filter products when category changes
   useEffect(() => {
     let result = [...products];
-    if (filters.category.length > 0) {
-      result = result.filter(p => filters.category.includes(p.category));
+    if (selectedCategory !== 'All') {
+      result = result.filter(p => p.category === selectedCategory || 
+        (selectedCategory === 'New Arrivals' && p.badge === 'New') ||
+        (selectedCategory === 'Best Sellers' && p.badge === 'Best Seller'));
     }
-    result = result.filter(p => p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]);
-    if (filters.sizes.length > 0) {
-      result = result.filter(p => p.sizes?.some(s => filters.sizes.includes(s)));
-    }
-    if (filters.rating > 0) {
-      result = result.filter(p => p.rating >= filters.rating);
-    }
+    // Apply sorting
     if (sortBy === 'price-low') result.sort((a, b) => a.price - b.price);
     if (sortBy === 'price-high') result.sort((a, b) => b.price - a.price);
     if (sortBy === 'rating') result.sort((a, b) => b.rating - a.rating);
     if (sortBy === 'newest') result.sort((a, b) => b.id - a.id);
     setFilteredProducts(result);
-  }, [filters, sortBy, products]);
+  }, [selectedCategory, sortBy, products]);
+
+  // Handle category card click
+  const handleCategoryClick = (href) => {
+    navigate(href);
+  };
 
   if (isLoading) return <Loader />;
   
   return (
-    <div className="bg-gray-50 min-h-screen">
-      {/* Hero Banner with Image */}
-      <div className="relative h-[60vh] min-h-[500px] bg-cover bg-center bg-no-repeat flex items-center justify-center"
-           style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=1920&h=800&fit=crop)' }}>
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30"></div>
-        <div className="relative text-center text-white px-4 max-w-3xl mx-auto">
-          <div className="inline-block px-4 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm mb-4">
-            ✨ Complete Collection
+    <div className="bg-white min-h-screen">
+      {/* Quince-style Category Menu - Horizontal Scroll */}
+      <div className="border-b border-gray-100 bg-white sticky top-16 z-30">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex overflow-x-auto gap-6 py-4 scrollbar-hide">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`whitespace-nowrap text-sm font-light tracking-wide transition-colors ${
+                  selectedCategory === category 
+                    ? 'text-black border-b-2 border-black pb-2' 
+                    : 'text-gray-500 hover:text-black pb-2 border-b-2 border-transparent'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
           </div>
-          <h1 className="text-5xl md:text-7xl font-light mb-4 tracking-wide">Shop All</h1>
-          <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
-            Discover our complete collection of premium fashion, from timeless classics to seasonal must-haves
-          </p>
         </div>
       </div>
 
-      {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-4 py-4">
-        <div className="text-sm text-gray-500">
-          <Link to="/" className="hover:text-black">Home</Link> / 
-          <span className="text-black ml-1">Shop All</span>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 pb-16">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar Filters */}
-          <div className="lg:w-1/4">
-            <FilterSidebar filters={filters} setFilters={setFilters} />
-          </div>
-
-          {/* Main Content */}
-          <div className="lg:w-3/4">
-            {/* Toolbar */}
-            <div className="bg-white p-4 rounded-lg shadow-sm mb-6 flex flex-wrap justify-between items-center gap-4">
-              <div className="text-sm text-gray-600">
-                Showing <span className="font-semibold">{filteredProducts.length}</span> of <span className="font-semibold">{products.length}</span> products
-              </div>
-              <div className="flex gap-3">
-                <div className="flex border rounded-lg overflow-hidden">
-                  <button 
-                    onClick={() => setViewMode('grid')} 
-                    className={`p-2 px-3 ${viewMode === 'grid' ? 'bg-black text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
-                  </button>
-                  <button 
-                    onClick={() => setViewMode('list')} 
-                    className={`p-2 px-3 ${viewMode === 'list' ? 'bg-black text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
-                  </button>
-                </div>
-                <select 
-                  value={sortBy} 
-                  onChange={(e) => setSortBy(e.target.value)} 
-                  className="px-4 py-2 border rounded-lg text-sm focus:outline-none focus:border-black bg-white"
-                >
-                  <option value="featured">Featured</option>
-                  <option value="newest">Newest First</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
-                </select>
-              </div>
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Shop by Category Section - Only this section */}
+        <h2 className="text-xl font-light tracking-wide mb-4">Shop by Category</h2>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          {/* Men Category Card */}
+          <div 
+            onClick={() => handleCategoryClick('/men')}
+            className="group relative rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300"
+          >
+            <div className="aspect-square overflow-hidden bg-gray-100">
+              <img 
+                src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=400&fit=crop"
+                alt="Men"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+              />
             </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <h3 className="text-white text-lg font-light tracking-wide">Men</h3>
+              <p className="text-white/80 text-xs font-light">Shop Now →</p>
+            </div>
+          </div>
 
-            {/* Products Display */}
-            {filteredProducts.length === 0 ? (
-              <div className="bg-white rounded-lg p-12 text-center">
-                <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-gray-500">No products found. Try adjusting your filters.</p>
-                <button 
-                  onClick={() => setFilters({ category: [], priceRange: [0, 500], sizes: [], rating: 0 })}
-                  className="mt-4 text-black hover:underline"
-                >
-                  Clear all filters
-                </button>
-              </div>
-            ) : (
-              <div className={viewMode === 'grid' 
-                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' 
-                : 'space-y-4'
-              }>
-                {filteredProducts.map(product => (
-                  <ProductCard key={product.id} product={product} viewMode={viewMode} />
-                ))}
-              </div>
-            )}
+          {/* Women Category Card */}
+          <div 
+            onClick={() => handleCategoryClick('/women')}
+            className="group relative rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300"
+          >
+            <div className="aspect-square overflow-hidden bg-gray-100">
+              <img 
+                src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=400&fit=crop"
+                alt="Women"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+              />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <h3 className="text-white text-lg font-light tracking-wide">Women</h3>
+              <p className="text-white/80 text-xs font-light">Shop Now →</p>
+            </div>
+          </div>
 
-            {/* Pagination */}
-            {filteredProducts.length > 12 && (
-              <div className="flex justify-center gap-2 mt-10">
-                <button className="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors">Previous</button>
-                <button className="px-4 py-2 bg-black text-white rounded-lg">1</button>
-                <button className="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors">2</button>
-                <button className="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors">3</button>
-                <button className="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors">Next</button>
-              </div>
-            )}
+          {/* Kids Category Card */}
+          <div 
+            onClick={() => handleCategoryClick('/kids')}
+            className="group relative rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300"
+          >
+            <div className="aspect-square overflow-hidden bg-gray-100">
+              <img 
+                src="https://images.unsplash.com/photo-1519451241324-20b4ea2c4220?w=400&h=400&fit=crop"
+                alt="Kids"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+              />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <h3 className="text-white text-lg font-light tracking-wide">Kids</h3>
+              <p className="text-white/80 text-xs font-light">Shop Now →</p>
+            </div>
+          </div>
+
+          {/* Accessories Category Card */}
+          <div 
+            onClick={() => handleCategoryClick('/accessories')}
+            className="group relative rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300"
+          >
+            <div className="aspect-square overflow-hidden bg-gray-100">
+              <img 
+                src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400&h=400&fit=crop"
+                alt="Accessories"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+              />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <h3 className="text-white text-lg font-light tracking-wide">Accessories</h3>
+              <p className="text-white/80 text-xs font-light">Shop Now →</p>
+            </div>
+          </div>
+
+          {/* View All Card - Last */}
+          <div 
+            onClick={() => navigate('/shop/all')}
+            className="group relative rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300"
+          >
+            <div className="aspect-square overflow-hidden bg-gray-100">
+              <img 
+                src="https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop"
+                alt="View All"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+              />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+              <h3 className="text-white text-xl font-light tracking-wide">View All</h3>
+              <p className="text-white/70 text-xs font-light mt-1">Explore everything →</p>
+            </div>
           </div>
         </div>
+
+        {/* Results Count */}
+        <div className="flex justify-between items-center mt-8 mb-4 pt-6 border-t border-gray-100">
+          <p className="text-sm text-gray-500">
+            {filteredProducts.length} items
+          </p>
+          <div className="flex gap-3 items-center">
+            <select 
+              value={sortBy} 
+              onChange={(e) => setSortBy(e.target.value)} 
+              className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black bg-white"
+            >
+              <option value="featured">Featured</option>
+              <option value="newest">Newest</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="rating">Highest Rated</option>
+            </select>
+            <div className="flex border border-gray-200 rounded-lg overflow-hidden">
+              <button 
+                onClick={() => setViewMode('grid')} 
+                className={`p-2 px-3 ${viewMode === 'grid' ? 'bg-black text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+              </button>
+              <button 
+                onClick={() => setViewMode('list')} 
+                className={`p-2 px-3 ${viewMode === 'list' ? 'bg-black text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Products Grid */}
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-gray-500">No products found in this category.</p>
+          </div>
+        ) : (
+          <div className={viewMode === 'grid' 
+            ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6' 
+            : 'space-y-4'
+          }>
+            {filteredProducts.map(product => (
+              <ProductCard key={product.id} product={product} viewMode={viewMode} />
+            ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {filteredProducts.length > 12 && (
+          <div className="flex justify-center gap-2 mt-12">
+            <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">Previous</button>
+            <button className="px-4 py-2 bg-black text-white rounded-lg">1</button>
+            <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">2</button>
+            <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">3</button>
+            <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">Next</button>
+          </div>
+        )}
       </div>
     </div>
   );

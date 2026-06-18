@@ -112,13 +112,6 @@ const AccessoriesPage = () => {
       <div className="relative h-[50vh] min-h-[400px] bg-cover bg-center bg-no-repeat flex items-center justify-center"
            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=1920&h=600&fit=crop)' }}>
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30"></div>
-        <div className="relative text-center text-white px-4">
-          <div className="inline-block px-4 py-1 bg-purple-500/20 backdrop-blur-sm rounded-full text-sm mb-4 border border-purple-400/30">
-            💎 Complete Your Look
-          </div>
-          <h1 className="text-6xl md:text-7xl font-light mb-4 tracking-wide">Accessories</h1>
-          <p className="text-xl max-w-2xl mx-auto">Complete your look with THEKOUR's premium accessories</p>
-        </div>
       </div>
 
       {/* Breadcrumb */}
